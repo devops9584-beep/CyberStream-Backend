@@ -38,7 +38,7 @@ jobs:
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASS: root
+          DB_PASSWORD: root
           DB_NAME: cyber-stream_db_cs_main
           NODE_ENV: test
 
@@ -53,5 +53,5 @@ jobs:
         env:
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASS: root
+          DB_PASSWORD: root
           DB_NAME: cyber-stream_db_cs_main
