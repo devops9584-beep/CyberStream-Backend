@@ -2,15 +2,12 @@ name: CyberStream CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   test-backend:
     runs-on: ubuntu-latest
 
-    # Definimos los servicios (MySQL) necesarios para tus tests de integración
     services:
       mysql:
         image: mysql:8.0
@@ -33,7 +30,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Unit & Integration Tests (Jest)
+      - name: Initialize Database Schema
+        run: mysql -h 127.0.0.1 -u root -proot cyber-stream_db_cs_main < schema.sql
+
+      - name: Run Backend Tests (Jest)
         run: npm test
         env:
           DB_HOST: 127.0.0.1
@@ -45,5 +45,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run E2E Tests (Playwright)
-        run: npx playwright test
+      - name: Start Server and Run E2E Tests
+        run: |
+          npm start & 
+          npx playwright test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASS: root
+          DB_NAME: cyber-stream_db_cs_main
