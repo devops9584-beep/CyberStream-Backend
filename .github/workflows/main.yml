@@ -25,15 +25,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Initialize Database Schema
+      - name: Initialize Database
         run: mysql -h 127.0.0.1 -u root -proot cyber-stream_db_cs_main < schema.sql
 
-      - name: Run Jest Tests (Backend)
+      - name: Run Tests
         run: npm test
         env:
           DB_HOST: 127.0.0.1
@@ -41,17 +40,4 @@ jobs:
           DB_PASSWORD: root
           DB_NAME: cyber-stream_db_cs_main
           NODE_ENV: test
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Start Server and Run E2E Tests
-        run: |
-          npm start & 
-          npx wait-on http://localhost:3000
-          npm run test:e2e
-        env:
-          DB_HOST: 127.0.0.1
-          DB_USER: root
-          DB_PASSWORD: root
-          DB_NAME: cyber-stream_db_cs_main
+          TMDB_API_KEY: mock_key

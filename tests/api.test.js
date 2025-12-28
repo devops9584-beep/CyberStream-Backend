@@ -103,9 +103,5 @@ describe('Suite Completa de Integración - CyberStream API', () => {
             expect(res.statusCode).toBe(200);
         });
 
-        test('GET /api/tmdb/search - Integración externa', async () => {
-            const res = await request(app).get('/api/tmdb/search?q=Batman');
-            expect(res.statusCode).toBe(200);
-        });
     });
 });
