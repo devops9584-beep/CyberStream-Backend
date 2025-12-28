@@ -38,19 +38,7 @@ const initQuery = `
     ALTER TABLE media_content ADD COLUMN IF NOT EXISTS release_date DATE;
 `;
 // Split queries because mysql2 might not support multiple statements by default unless configured
-const initQueries = initQuery.split(';').filter(q => q.trim());
-/* initQueries.forEach(q => {
-    db.query(q, err => {
-        if (err && err.code !== 'ER_DUP_FIELDNAME') console.error('DB Init Error:', err.message);
-    });
-}); */
-if (process.env.NODE_ENV !== 'test') {
-    initQueries.forEach(q => {
-        db.query(q, err => {
-            if (err && err.code !== 'ER_DUP_FIELDNAME') console.error('DB Init Error:', err.message);
-        });
-    });
-}
+
 
 // Helper to log actions
 function logUserAction(userIdentifier, action, detail) {
