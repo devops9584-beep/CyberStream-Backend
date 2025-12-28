@@ -32,7 +32,7 @@ describe('Suite Completa de Integración - CyberStream API', () => {
     // --- MÓDULO 1: AUTENTICACIÓN & SEGURIDAD ---
     describe('Auth & User Endpoints', () => {
         test('POST /api/login - Validación de credenciales', async () => {
-            const res = await request(app).post('/api/login').send({ email: 'test@c.com', password: 'test@c.com' });
+            const res = await request(app).post('/api/login').send({ email: 'admin@cyberstream.com', password: '123' });
             expect(res.statusCode).toBe(200);
             expect(res.body.auth).toBe(true);
         });

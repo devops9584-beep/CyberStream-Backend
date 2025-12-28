@@ -39,11 +39,18 @@ const initQuery = `
 `;
 // Split queries because mysql2 might not support multiple statements by default unless configured
 const initQueries = initQuery.split(';').filter(q => q.trim());
-initQueries.forEach(q => {
+/* initQueries.forEach(q => {
     db.query(q, err => {
         if (err && err.code !== 'ER_DUP_FIELDNAME') console.error('DB Init Error:', err.message);
     });
-});
+}); */
+if (process.env.NODE_ENV !== 'test') {
+    initQueries.forEach(q => {
+        db.query(q, err => {
+            if (err && err.code !== 'ER_DUP_FIELDNAME') console.error('DB Init Error:', err.message);
+        });
+    });
+}
 
 // Helper to log actions
 function logUserAction(userIdentifier, action, detail) {
@@ -341,13 +348,13 @@ app.get('/api/admin/stats', verifyAdmin, (req, res) => {
     const q4 = 'SELECT SUM(bandwidth_consumed_mb) as mb FROM playback_stats';
 
     db.query(q1, (err, r1) => {
-        stats.users = r1[0].count;
+        stats.users = (r1 && r1.length > 0) ? r1[0].count : 0;
         db.query(q2, (err, r2) => {
-            stats.media = r2[0].count;
+            stats.media = (r2 && r2.length > 0) ? r2[0].count : 0;
             db.query(q3, (err, r3) => {
-                stats.views = r3[0].count;
+                stats.views = (r3 && r3.length > 0) ? r3[0].count : 0;
                 db.query(q4, (err, r4) => {
-                    stats.bandwidth = r4[0].mb || 0;
+                    stats.bandwidth = (r4 && r4.length > 0) ? (r4[0].mb || 0) : 0;
                     res.json(stats);
                 });
             });

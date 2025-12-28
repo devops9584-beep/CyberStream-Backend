@@ -1,4 +1,4 @@
--- 1. Tablas Base
+-- 1. Maestras
 CREATE TABLE IF NOT EXISTS `subscription_levels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -12,7 +12,16 @@ CREATE TABLE IF NOT EXISTS `categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
--- 2. Tablas con dependencias
+CREATE TABLE IF NOT EXISTS `logs_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(255) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `detail` varchar(255) DEFAULT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- 2. Dependientes
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `full_name` varchar(100) NOT NULL,
@@ -35,10 +44,30 @@ CREATE TABLE IF NOT EXISTS `media_content` (
   FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
 ) ENGINE=InnoDB;
 
--- 3. SEMILLAS (Seed data para que el test no falle por falta de IDs)
+CREATE TABLE IF NOT EXISTS `my_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11),
+  `media_id` int(11),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`media_id`) REFERENCES `media_content` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `ratings_reviews` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `media_id` int(11) NOT NULL,
+  `rating` int(1),
+  `comment` text,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`media_id`) REFERENCES `media_content` (`id`)
+) ENGINE=InnoDB;
+
+-- 3. Semillas de Prueba
 INSERT IGNORE INTO `subscription_levels` (id, name) VALUES (1, 'Premium');
 INSERT IGNORE INTO `categories` (id, name, section) VALUES (1, 'Acción', 'pelicula');
 INSERT IGNORE INTO `users` (id, full_name, email, password, role, sub_level_id) 
 VALUES (1, 'Administrador', 'admin@cyberstream.com', '123', 'admin', 1);
 INSERT IGNORE INTO `media_content` (id, title, section, category_id, file_path) 
-VALUES (1, 'Pelicula Test', 'pelicula', 1, 'media/test.mp4');
+VALUES (1, 'Test', 'pelicula', 1, 'media/test.mp4');
