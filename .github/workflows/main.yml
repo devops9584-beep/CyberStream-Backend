@@ -29,10 +29,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # PASO CRUCIAL: Esperamos a que MySQL esté listo al 100%
+      - name: Wait for MySQL
+        run: sleep 15
+
       - name: Initialize Database
         run: mysql -h 127.0.0.1 -u root -proot cyber-stream_db_cs_main < schema.sql
 
-      - name: Run Tests
+      - name: Run Backend Tests
         run: npm test
         env:
           DB_HOST: 127.0.0.1
